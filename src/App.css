@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Theme CSS Variables */
+:root {
+  --primary-color: #0d6efd;
+  --bg-color: #0f172a;
+  --card-bg: #1e293b;
+  --text-color: #f8fafc;
+  --text-muted: #94a3b8;
+  --card-border: rgba(255, 255, 255, 0.08);
+  --nav-bg: #0f172a;
+}
+
+[data-theme='light'] {
+  --primary-color: #0284c7;
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-color: #0f172a;
+  --text-muted: #64748b;
+  --card-border: rgba(0, 0, 0, 0.08);
+  --nav-bg: #ffffff;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Card Styling */
+.custom-card {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 12px;
+  transition: transform 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.custom-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--primary-color) !important;
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Light Mode Overrides */
+[data-theme='light'] .text-secondary {
+  color: var(--text-muted) !important;
+}
+
+[data-theme='light'] .text-light {
+  color: #0f172a !important;
+}
+
+[data-theme='light'] .navbar {
+  background-color: var(--nav-bg) !important;
+  border-bottom-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme='light'] .navbar-brand {
+  color: #0f172a !important;
+}
+
+[data-theme='light'] .nav-link {
+  color: #475569 !important;
+}
+
+/* Super Bright Active Navbar Link (Neon Glow Effect) */
+.nav-link.active-link {
+  color: #38bdf8 !important;
+  font-weight: 700 !important;
+  text-shadow: 0 0 14px rgba(56, 189, 248, 0.8) !important;
+  position: relative;
+}
+
+.nav-link.active-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  left: 12%;
+  width: 76%;
+  height: 3px;
+  background: #38bdf8;
+  border-radius: 4px;
+  box-shadow: 0 0 10px #38bdf8;
+}
+
+/* Light / Dark Mode Toggle Button */
+.theme-btn {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-btn:hover {
+  background-color: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border-color: #38bdf8;
+}
+/* Light Mode Contrast Fix */
+[data-theme='light'],
+.light-theme,
+body.light {
+  .bg-dark,
+  .card,
+  section .rounded-4 {
+    background-color: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  h1, h2, h3, h4, h5, h6,
+  .text-light,
+  strong {
+    color: #0f172a !important;
+  }
+
+  p,
+  .text-secondary,
+  span.text-secondary,
+  .small {
+    color: #475569 !important;
+  }
+
+  .badge,
+  .rounded-pill {
+    color: #1e293b !important;
+  }
+}
+/* Light Mode Form & Icon Contrast Fix */
+[data-theme='light'] {
+  /* Fix GitHub Icon in Contact card */
+  .bi-github {
+    color: #0f172a !important;
+  }
+
+  /* Fix Form Inputs to Clean Light Theme */
+  input.form-control,
+  textarea.form-control {
+    background-color: #f8fafc !important;
+    border-color: #cbd5e1 !important;
+    color: #0f172a !important;
+  }
+
+  input.form-control::placeholder,
+  textarea.form-control::placeholder {
+    color: #94a3b8 !important;
+  }
+
+  input.form-control:focus,
+  textarea.form-control:focus {
+    background-color: #ffffff !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+  }
+}
+/* --- Dynamic Accent Color Setup --- */
+:root {
+  --accent-color: #0d6efd; /* Default Blue */
+}
+
+/* Accent overrides for Bootstrap & custom elements */
+.btn-primary,
+.bg-primary {
+  background-color: var(--accent-color) !important;
+  border-color: var(--accent-color) !important;
+}
+
+.text-primary {
+  color: var(--accent-color) !important;
+}
+
+.border-primary {
+  border-color: var(--accent-color) !important;
+}
