@@ -20,16 +20,17 @@ const About = () => {
             <div className="p-4 p-md-4 rounded-4 bg-dark bg-opacity-50 border border-secondary border-opacity-25 h-100 d-flex flex-column justify-content-between shadow-sm">
               <div>
                 <h3 className="h4 fw-bold text-light mb-3">
-                  Transitioning with Passion into Frontend Development
+                  Transitioning with Passion into Full Stack Development
                 </h3>
                 <p className="text-secondary mb-3" style={{ fontSize: '15.5px', lineHeight: '1.7' }}>
                   With 4+ years of professional background across Quality Control and Academic Lecturing, 
                   I developed high attention to detail, structured problem-solving, and clear communication.
                 </p>
-                <p className="text-secondary mb-4" style={{ fontSize: '15.5px', lineHeight: '1.7' }}>
-                  I actively engineer responsive, accessible, and interactive web applications using{' '}
-                  <strong className="text-light">HTML5, CSS3, JavaScript, Bootstrap 5,</strong> and{' '}
-                  <strong className="text-light">React.js</strong>.
+                <p className="text-secondary mb-3" style={{ fontSize: '15.5px', lineHeight: '1.7' }}>
+                  I build complete web and mobile applications, from responsive React and React Native
+                  interfaces to Django REST APIs and PostgreSQL databases, using{" "}
+                  <strong className="text-white">HTML5, CSS3, JavaScript, Bootstrap 5, React.js,</strong>{" "}
+                  <strong className="text-white">Python</strong>, and <strong className="text-white">Django</strong>.
                 </p>
 
                 {/* Educational / Direction Badges */}
@@ -75,7 +76,7 @@ const About = () => {
                     <div>
                       <strong className="text-light d-block mb-1" style={{ fontSize: '14.5px' }}>Precision & Quality</strong>
                       <span className="text-secondary" style={{ fontSize: '13.5px', lineHeight: '1.6' }}>
-                        QA background translates directly into clean, pixel-perfect, and bug-resistant UI components.
+                        QA background translates directly into clean, bug-resistant code across both frontend and backend.
                       </span>
                     </div>
                   </div>
@@ -95,7 +96,7 @@ const About = () => {
                     <div>
                       <strong className="text-light d-block mb-1" style={{ fontSize: '14.5px' }}>Practical Execution</strong>
                       <span className="text-secondary" style={{ fontSize: '13.5px', lineHeight: '1.6' }}>
-                        Multiple live deployed projects built with reusable architecture and responsive design.
+                       8 live deployed projects, from React UIs to Django REST APIs with PostgreSQL, built with reusable architecture.
                       </span>
                     </div>
                   </div>

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useApi } from '../api';
+import { profile as fallbackProfile } from '../data/profileData';
 
 const Navbar = () => {
+  const profile = useApi('profile', fallbackProfile);
   const [activeSection, setActiveSection] = useState('home');
   const [theme, setTheme] = useState('dark');
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -82,10 +85,10 @@ const Navbar = () => {
               letterSpacing: '0.5px'
             }}
           >
-            KT
+            {profile.initials}
           </div>
           <span className="text-light fs-6 fw-semibold text-truncate" style={{ letterSpacing: '0.2px', maxWidth: '160px' }}>
-            K. Thilagavathi
+            {profile.fullName}
           </span>
         </a>
 

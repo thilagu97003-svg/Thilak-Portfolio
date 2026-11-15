@@ -1,7 +1,10 @@
 import React, { useState, useRef } from 'react';
 import profileImg from '../assets/profile.png';
+import { useApi } from '../api';
+import { profile as fallbackProfile } from '../data/profileData';
 
 const Hero = () => {
+  const profile = useApi('profile', fallbackProfile);
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -47,18 +50,20 @@ const Hero = () => {
         <div className="row align-items-center gy-5">
           {/* Left Column: Bio & CTA */}
           <div className="col-lg-7 text-center text-lg-start order-2 order-lg-1">
-           <span className="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 mb-3 px-3 py-1.5 rounded-pill fw-medium">
+           {profile.availableForHire && (
+<span className="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 mb-3 px-3 py-1.5 rounded-pill fw-medium">
           <span className="spinner-grow spinner-grow-sm me-1 text-success" style={{ width: '8px', height: '8px' }}></span>
            Available for Hire
           </span>
+            )}
             <h1 className="display-4 fw-bold mb-2">
-              Hi, I'm <span className="gradient-text">Thilak</span>
+              Hi, I'm <span className="gradient-text">{profile.displayName}</span>
             </h1>
             <h4 className="text-light fw-medium mb-3">
-              Frontend Developer
+              {profile.role}
             </h4>
             <p className="lead text-secondary mb-4 col-lg-10 p-0">
-              Crafting responsive, pixel-perfect, and interactive web applications using HTML, CSS, JavaScript, Bootstrap, and React.
+              {profile.tagline}
             </p>
             
             {/* CTA Buttons */}
@@ -76,7 +81,7 @@ const Hero = () => {
               </a>
 
               <a 
-                href="https://mail.google.com/mail/?view=cm&fs=1&to=thilagu97003@gmail.com" 
+                href={`https://mail.google.com/mail/?view=cm&fs=1&to=${profile.email}`} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="btn btn-outline-secondary text-light px-4 py-2 rounded-pill fw-medium"
@@ -89,7 +94,7 @@ const Hero = () => {
             <div className="d-flex align-items-center justify-content-center justify-content-lg-start gap-3 pt-1">
               <span className="text-secondary small fw-medium">Connect:</span>
               <a 
-                href="https://github.com/thilagu97003-svg" 
+                href={profile.githubUrl} 
                 target="_blank" 
                 rel="noreferrer" 
                 className="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center"
@@ -99,7 +104,7 @@ const Hero = () => {
                 <i className="bi bi-github text-light fs-6"></i>
               </a>
               <a 
-                href="https://www.linkedin.com/in/k-thilagavathi-325401427/" 
+                href={profile.linkedinUrl} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center"
@@ -112,18 +117,12 @@ const Hero = () => {
 
             {/* Metrics */}
             <div className="row g-3 mt-4 pt-3 border-top border-secondary border-opacity-25" style={{ maxWidth: '420px' }}>
-              <div className="col-4">
-                <h4 className="fw-bold text-light mb-0">3+</h4>
-                <span className="text-secondary small">Live Apps</span>
-              </div>
-              <div className="col-4">
-                <h4 className="fw-bold text-light mb-0">4+ Yrs</h4>
-                <span className="text-secondary small">Experience</span>
-              </div>
-              <div className="col-4">
-                <h4 className="fw-bold text-light mb-0">React</h4>
-                <span className="text-secondary small">Frontend Focus</span>
-              </div>
+              {profile.stats.map((stat) => (
+                <div className="col-4" key={stat.label}>
+                  <h4 className="fw-bold text-light mb-0">{stat.value}</h4>
+                  <span className="text-secondary small">{stat.label}</span>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -136,7 +135,7 @@ const Hero = () => {
               >
                 <img 
                   src={profileImg} 
-                  alt="Thilaga Profile" 
+                  alt={`${profile.fullName} profile photo`} 
                   className="w-100 h-100"
                   style={{ objectFit: 'cover', objectPosition: 'center 10%' }}
                 />
@@ -183,7 +182,7 @@ const Hero = () => {
                       )}
                     </div>
                     <span className="text-secondary d-block" style={{ fontSize: '11px' }}>
-                      {isPlaying ? `${formatTime(currentTime)} / ${formatTime(duration)}` : '40 sec overview'}
+                      {isPlaying ? `${formatTime(currentTime)} / ${formatTime(duration)}` : '50 sec overview'}
                     </span>
                   </div>
                 </div>

@@ -192,3 +192,236 @@ body.light {
 .border-primary {
   border-color: var(--accent-color) !important;
 }
+
+/* =====================================================================
+   ADDED for the Django-powered version
+   ===================================================================== */
+
+/* --- Project cards --- */
+/* Mobile-app screenshots are tall: keep the top of the screen visible in the card */
+.project-img {
+  object-position: top;
+}
+
+/* Long descriptions (e.g. shoe store) stay 4 lines on the card; full text is in the details popup */
+.project-desc {
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* --- Project details popup --- */
+.project-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1070; /* above the terminal button (1050) and terminal window (1060) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(3px);
+}
+
+.project-modal {
+  position: relative;
+  width: 100%;
+  max-width: 860px;
+  max-height: 92vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.project-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 3;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.55);
+  border-radius: 50%;
+}
+
+.project-modal-stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #0b1120;
+  border-radius: 1rem 1rem 0 0;
+  overflow: hidden;
+}
+
+.project-modal-stage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* never crop screenshots inside the popup */
+}
+
+.project-modal-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.project-modal-nav:hover {
+  background: var(--accent-color);
+}
+
+.project-modal-thumbs {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px 0;
+  overflow-x: auto;
+}
+
+.project-modal-thumbs button {
+  flex: 0 0 auto;
+  width: 84px;
+  height: 52px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0b1120;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.project-modal-thumbs button.active {
+  border-color: var(--accent-color);
+  opacity: 1;
+}
+
+.project-modal-thumbs img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+@media (max-width: 575.98px) {
+  .project-modal-stage { aspect-ratio: 4 / 3; }
+}
+
+/* --- Light mode fixes (the generic ".badge, .rounded-pill" rule above forces dark text) --- */
+[data-theme='light'] .btn-primary,
+[data-theme='light'] .btn-primary.rounded-pill {
+  color: #ffffff !important;
+}
+
+[data-theme='light'] .project-badge,
+[data-theme='light'] .badge.bg-black.project-badge {
+  color: #ffffff !important;
+}
+
+[data-theme='light'] .project-tech {
+  background-color: #eef2f7 !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+
+[data-theme='light'] .project-modal-close {
+  filter: none;
+  background-color: rgba(15, 23, 42, 0.12);
+}
+
+/* --- Helper classes the JSX already uses but Bootstrap does not ship (it has no .5 steps) --- */
+.tracking-wider { letter-spacing: 0.08em; }
+.p-3\.5   { padding: 0.875rem !important; }
+.px-2\.5  { padding-left: 0.625rem !important; padding-right: 0.625rem !important; }
+.py-0\.5  { padding-top: 0.125rem !important; padding-bottom: 0.125rem !important; }
+.py-1\.5  { padding-top: 0.375rem !important; padding-bottom: 0.375rem !important; }
+.py-2\.5  { padding-top: 0.625rem !important; padding-bottom: 0.625rem !important; }
+.mt-0\.5  { margin-top: 0.125rem !important; }
+.gap-1\.5 { gap: 0.375rem !important; }
+.gap-2\.5 { gap: 0.625rem !important; }
+.bg-opacity-90 { --bs-bg-opacity: 0.9; }
+.text-opacity-80 { --bs-text-opacity: 0.8; }
+@media (min-width: 768px) {
+  .p-md-3\.5 { padding: 0.875rem !important; }
+}
+/* =====================================================================
+   PROJECTS CAROUSEL (one auto-moving row, pauses on hover)
+   ===================================================================== */
+.projects-marquee {
+  overflow: hidden;
+  padding: 28px 0; /* room so the hover "lift" and glow are not clipped */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+}
+
+.projects-track {
+  display: flex;
+  width: max-content;
+  animation: projects-scroll 48s linear infinite; /* real duration is set in Projects.jsx: 6s per card */
+  will-change: transform;
+}
+
+.projects-marquee:hover .projects-track,
+.projects-track.paused {
+  animation-play-state: paused;
+}
+
+@keyframes projects-scroll {
+  to { transform: translateX(-50%); }
+}
+
+.project-slide {
+  flex: 0 0 auto;
+  width: 364px;
+  padding: 0 12px;
+  display: flex;
+}
+
+.project-card {
+  flex: 1;
+  width: 100%;
+  cursor: pointer;
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover,
+.project-card:focus-visible {
+  transform: translateY(-8px);
+  border-color: var(--accent-color);
+  box-shadow: 0 12px 30px -4px color-mix(in srgb, var(--accent-color) 35%, transparent);
+  outline: none;
+}
+
+.project-img {
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.project-card:hover .project-img {
+  transform: scale(1.08);
+}
+
+@media (max-width: 575.98px) {
+  .project-slide { width: 86vw; max-width: 340px; }
+}
+
+/* People who turned off animations get a normal swipe/scroll row instead */
+@media (prefers-reduced-motion: reduce) {
+  .projects-track { animation: none; }
+  .projects-marquee { overflow-x: auto; }
+}
+.project-modal-stage {
+  width: 100%;
+  height: min(46vh, 420px);
+  aspect-ratio: auto;
+}

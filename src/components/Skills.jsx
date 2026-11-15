@@ -1,27 +1,26 @@
 import React, { useState } from 'react';
+import { useApi } from '../api';
+import { skills as fallbackSkills } from '../data/skillsData';
+
+const CATEGORY_LABELS = {
+  frontend: 'Frontend Core',
+  backend: 'Backend & DB',
+  ai: 'AI (Learning)',
+  tools: 'Tools & Workflow',
+  qa: 'Testing & QA',
+};
 
 
 const Skills = () => {
   const [activeTab, setActiveTab] = useState('all');
 
-  const skillsData = [
-    // Frontend
-    { name: 'React.js', category: 'frontend', icon: 'bi-filetype-jsx', color: '#61dafb' },
-    { name: 'JavaScript', category: 'frontend', icon: 'bi-filetype-js', color: '#f7df1e' },
-    { name: 'HTML5', category: 'frontend', icon: 'bi-filetype-html', color: '#e34f26' },
-    { name: 'CSS3', category: 'frontend', icon: 'bi-filetype-css', color: '#1572b6' },
-    { name: 'Bootstrap 5', category: 'frontend', icon: 'bi-bootstrap-fill', color: '#7952b3' },
-    { name: 'Responsive UI', category: 'frontend', icon: 'bi-phone', color: '#38bdf8' },
-
-    // Tools & Design
-    { name: 'Git & GitHub', category: 'tools', icon: 'bi-github', color: '#f05032' },
-    { name: 'VS Code', category: 'tools', icon: 'bi-laptop', color: '#007acc' },
-    { name: 'Figma to Code', category: 'tools', icon: 'bi-bounding-box-circles', color: '#a259ff' },
-    { name: 'Vercel', category: 'tools', icon: 'bi-cloud-arrow-up-fill', color: '#ffffff' },
-
-    // Testing & Strengths
-    { name: 'QA Testing', category: 'qa', icon: 'bi-patch-check-fill', color: '#22c55e' },
-    { name: 'Cross-Browser', category: 'qa', icon: 'bi-browser-chrome', color: '#3b82f6' },
+  // Skills come from the Django API; skillsData.js is the offline fallback
+  const skillsData = useApi('skills', fallbackSkills);
+  const tabs = [
+    { key: 'all', label: 'All Stack' },
+    ...Object.keys(CATEGORY_LABELS)
+      .filter((key) => skillsData.some((item) => item.category === key))
+      .map((key) => ({ key, label: CATEGORY_LABELS[key] })),
   ];
 
   const filteredSkills = activeTab === 'all' 
@@ -50,12 +49,7 @@ const Skills = () => {
 
         {/* Filter Filter Tabs */}
         <div className="d-flex justify-content-center gap-2 mb-5 flex-wrap">
-          {[
-            { key: 'all', label: 'All Stack' },
-            { key: 'frontend', label: 'Frontend Core' },
-            { key: 'tools', label: 'Tools & Workflow' },
-            { key: 'qa', label: 'Testing & QA' },
-          ].map((tab) => (
+          {tabs.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}

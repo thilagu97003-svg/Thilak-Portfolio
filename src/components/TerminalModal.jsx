@@ -1,10 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useApi } from '../api';
+import { profile as fallbackProfile } from '../data/profileData';
+import { skills as fallbackSkills } from '../data/skillsData';
+import { projects as fallbackProjects } from '../data/projectsData';
+
+const SKILL_LABELS = { frontend: 'Frontend', backend: 'Backend & DB', ai: 'AI (Learning)', tools: 'Tools & Workflow', qa: 'Testing & QA' };
 
 const TerminalModal = () => {
+  const profile = useApi('profile', fallbackProfile);
+  const skills = useApi('skills', fallbackSkills);
+  const projects = useApi('projects', fallbackProjects);
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [history, setHistory] = useState([
-    { type: 'system', text: "Welcome to Thilak's Interactive Terminal v1.0" },
+    { type: 'system', text: `Welcome to ${profile.displayName}'s Interactive Terminal v1.0` },
     { type: 'system', text: "Type 'help' to see the list of available commands." }
   ]);
   const inputRef = useRef(null);
@@ -36,27 +45,26 @@ const TerminalModal = () => {
         });
         break;
       case 'bio':
-        newHistory.push({
-          type: 'output',
-          text: 'Frontend Developer with 4+ years of professional experience, building responsive, pixel-perfect web apps using React, JavaScript, and Bootstrap.'
-        });
+        newHistory.push({ type: 'output', text: profile.bio });
         break;
-      case 'skills':
-        newHistory.push({
-          type: 'output',
-          text: 'Languages & Frameworks:\n  • React.js, JavaScript (ES6+), HTML5, CSS3\n  • Bootstrap, Git, GitHub, REST APIs'
-        });
+      case 'skills': {
+        const lines = Object.keys(SKILL_LABELS)
+          .map((key) => ({ key, list: skills.filter((item) => item.category === key) }))
+          .filter((group) => group.list.length > 0)
+          .map((group) => `  • ${SKILL_LABELS[group.key]}: ${group.list.map((item) => item.name).join(', ')}`);
+        newHistory.push({ type: 'output', text: `Technical stack:\n${lines.join('\n')}` });
         break;
+      }
       case 'projects':
         newHistory.push({
           type: 'output',
-          text: '1. FreshMart (Grocery E-Commerce)\n2. Hope Hands (NGO Platform)\n3. FrameCraft (Photography Showcase)'
+          text: projects.map((project, i) => `${i + 1}. ${project.title}`).join('\n')
         });
         break;
       case 'contact':
         newHistory.push({
           type: 'output',
-          text: 'Email: thilagu97003@gmail.com\nGitHub: github.com/thilagu97003-svg\nLinkedIn: linkedin.com/in/k-thilagavathi-325401427'
+          text: `Email: ${profile.email}\nGitHub: ${profile.githubUrl.replace(/^https?:\/\//, '')}\nLinkedIn: ${profile.linkedinUrl.replace(/^https?:\/\/(www\.)?/, '')}`
         });
         break;
       case 'clear':
@@ -138,7 +146,7 @@ const TerminalModal = () => {
                 <span className="rounded-circle bg-warning" style={{ width: '10px', height: '10px' }} />
                 <span className="rounded-circle bg-success" style={{ width: '10px', height: '10px' }} />
               </div>
-              <span className="text-secondary small">thilak@portfolio:~</span>
+              <span className="text-secondary small">{profile.displayName.toLowerCase()}@portfolio:~</span>
               <button
                 type="button"
                 className="btn-close btn-close-white btn-sm"

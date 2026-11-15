@@ -1,63 +1,13 @@
 import React, { useState } from 'react';
+import { useApi } from '../api';
+import { journey as fallbackJourney } from '../data/journeyData';
 
 const Journey = () => {
   const [activeTab, setActiveTab] = useState('experience');
 
-  const experienceData = [
-    {
-      role: 'Full Stack Developer (Trainee / Course)',
-      company: 'Vetri Technology Solutions, Tenkasi',
-      period: 'July 2026 - Present',
-      description:
-        'Building full-stack web applications and GenAI implementations. Engineering interactive frontends with React.js, modern CSS, and Python backend fundamentals.',
-      badge: 'Current'
-    },
-    {
-      role: 'Lecturer / Academic Instructor',
-      company: 'P.A.C. Ramasamy Raja Polytechnic College, Rajapalayam',
-      period: 'Dec 2019 - Apr 2023',
-      description:
-        'Taught technical curriculum, guided student engineering projects, and managed lab sessions with a focus on clear technical communication and structured problem-solving.',
-      badge: 'Academic / 3.4 Yrs'
-    },
-    {
-      role: 'Quality Assurance Investigator (QAI)',
-      company: 'Jay Jay Mills India Pvt Ltd, Perundurai, Erode',
-      period: ' Apr 2019 - Nov 2019 ',
-      description:
-        'Conducted systematic quality investigations, process audits, and root-cause analysis across production workflows.',
-      badge: 'Quality Assurance'
-    },
-    {
-      role: 'Quality Assurance Investigator (QAI)',
-      company: 'Sri Saravana Spinning Mills Ltd, Dindigul',
-      period: 'May 2015 - Jun 2016',
-      description:
-        'Managed rigorous quality investigation protocols, defect identification, and operational compliance reporting.',
-      badge: 'Quality Assurance'
-    }
-  ];
-
-  const educationData = [
-    {
-      degree: 'B.Tech in Textile Technology',
-      institution: 'Bannari Amman Institute of Technology, Erode',
-      period: '2016 - 2019',
-      description:
-        'Cultivated strong analytical reasoning, mathematical fundamentals, and process optimization techniques.',
-      badge: "Bachelor's Degree"
-    },
-    {
-      degree: 'Diploma in Textile Technology',
-      institution: 'P.A.C. Ramasamy Raja Polytechnic College, Rajapalayam',
-      period: '2012 - 2015',
-      description:
-        'Built a strong technical base in process mechanics and laboratory operations (later returned to serve as faculty).',
-      badge: 'Diploma'
-    }
-  ];
-
-  const displayList = activeTab === 'experience' ? experienceData : educationData;
+  // Experience + education come from the Django API; journeyData.js is the offline fallback
+  const journeyItems = useApi('journey', fallbackJourney);
+  const displayList = journeyItems.filter((item) => item.kind === activeTab);
 
   return (
     <section id="journey" className="py-5" style={{ backgroundColor: 'var(--bg-color, #0b1120)' }}>
@@ -121,7 +71,7 @@ const Journey = () => {
                 <div className="card bg-dark bg-opacity-50 border border-secondary border-opacity-25 rounded-3 p-3 shadow-sm">
                   <div className="d-flex justify-content-between align-items-start flex-wrap gap-1 mb-1">
                     <h5 className="text-light mb-0 fw-semibold fs-6">
-                      {item.role || item.degree}
+                      {item.title}
                     </h5>
                     <span className="badge bg-transparent text-info border border-info border-opacity-50 px-2 py-1 small rounded-pill">
                     {item.badge}
@@ -129,7 +79,7 @@ const Journey = () => {
                   </div>
 
                   <div className="text-secondary small fw-medium mb-2">
-                    {item.company || item.institution} &nbsp;•&nbsp; <span className="text-info">{item.period}</span>
+                    {item.organization} &nbsp;•&nbsp; <span className="text-info">{item.period}</span>
                   </div>
 
                   <p className="text-light text-opacity-75 small mb-0 lh-base">

@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import { useApi, postApi } from '../api';
+import { profile as fallbackProfile } from '../data/profileData';
 
 const Contact = () => {
+  const profile = useApi('profile', fallbackProfile);
   const [copied, setCopied] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState({ loading: false, success: false, error: false });
 
-  const emailAddress = "thilagu97003@gmail.com";
+  const emailAddress = profile.email;
 
   const handleCopyEmail = (e) => {
     e.preventDefault();
@@ -42,25 +45,33 @@ const Contact = () => {
     setStatus({ loading: true, success: false, error: false });
 
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          access_key: "f78ea06d-b4ac-433d-ab1c-08c771c0647f",
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          message: formData.message.trim(),
-          to_email: emailAddress,
-          subject: `Portfolio Hiring Lead: ${formData.name}`,
-        }),
-      });
+      const payload = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        message: formData.message.trim(),
+      };
 
-      const result = await response.json();
+      // 1) save the message in Django (read it in the admin inbox)
+      // 2) email notification through Web3Forms. If either one works, the visitor sees success.
+      const [saved, mailed] = await Promise.allSettled([
+        postApi('contact', payload),
+        fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({
+            access_key: "f78ea06d-b4ac-433d-ab1c-08c771c0647f",
+            ...payload,
+            to_email: emailAddress,
+            subject: `Portfolio Hiring Lead: ${payload.name}`,
+          }),
+        })
+          .then((res) => res.json())
+          .then((result) => {
+            if (!result.success) throw new Error("Email notification failed");
+          }),
+      ]);
 
-      if (result.success || response.ok) {
+      if (saved.status === "fulfilled" || mailed.status === "fulfilled") {
         setStatus({ loading: false, success: true, error: false });
         setFormData({ name: '', email: '', message: '' });
         setErrors({});
@@ -140,7 +151,7 @@ const Contact = () => {
 
             {/* Box 2: GitHub Profile */}
             <a 
-              href="https://github.com/thilagu97003-svg" 
+              href={profile.githubUrl} 
               target="_blank" 
               rel="noopener noreferrer" 
               className="p-3.5 p-md-4 rounded-4 bg-dark bg-opacity-75 border border-secondary border-opacity-25 d-flex align-items-center justify-content-between text-decoration-none shadow-sm"
@@ -163,7 +174,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <span className="text-secondary small d-block" style={{ fontSize: '12px' }}>GitHub Profile</span>
-                  <span className="text-light fw-medium small">thilagu97003-svg</span>
+                  <span className="text-light fw-medium small">{profile.githubUrl.replace(/^https?:\/\/(www\.)?github\.com\//, '')}</span>
                 </div>
               </div>
               <i className="bi bi-arrow-up-right text-secondary small"></i>
@@ -179,7 +190,7 @@ const Contact = () => {
               </div>
               <div>
                 <span className="text-secondary small d-block" style={{ fontSize: '12px' }}>Preferred Work Mode</span>
-                <span className="text-light fw-medium small">Open for 100% Remote / Work From Home (Full-Time)</span>
+                <span className="text-light fw-medium small">{profile.workMode}</span>
               </div>
             </div>
           </div>

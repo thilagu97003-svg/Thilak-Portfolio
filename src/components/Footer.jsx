@@ -1,6 +1,9 @@
 import React from 'react';
+import { useApi } from '../api';
+import { profile as fallbackProfile } from '../data/profileData';
 
 const Footer = () => {
+  const profile = useApi('profile', fallbackProfile);
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -13,7 +16,7 @@ const Footer = () => {
           {/* Left: Copyright */}
           <div className="col-md-4 text-center text-md-start">
             <span className="text-secondary small" style={{ fontSize: '13px' }}>
-              © {new Date().getFullYear()} <span className="text-light fw-semibold">Thilaga</span>. All rights reserved.
+              © {new Date().getFullYear()} <span className="text-light fw-semibold">{profile.displayName}</span>. All rights reserved.
             </span>
           </div>
 
@@ -42,7 +45,7 @@ const Footer = () => {
             <div className="d-flex justify-content-center justify-content-md-end gap-3" style={{ fontSize: '13.5px' }}>
               {/* GitHub */}
               <a
-                href="https://github.com/thilagu97003-svg"
+                href={profile.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-secondary text-decoration-none d-flex align-items-center gap-1.5"
@@ -56,7 +59,7 @@ const Footer = () => {
 
               {/* LinkedIn */}
               <a
-                href="https://www.linkedin.com/in/k-thilagavathi-325401427/"
+                href={profile.linkedinUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-secondary text-decoration-none d-flex align-items-center gap-1.5"
@@ -70,7 +73,7 @@ const Footer = () => {
 
               {/* Email */}
               <a
-                href="https://mail.google.com/mail/?view=cm&fs=1&to=thilagu97003@gmail.com" target="_blank" rel="noopener noreferrer"
+                href={`https://mail.google.com/mail/?view=cm&fs=1&to=${profile.email}`} target="_blank" rel="noopener noreferrer"
                 className="text-secondary text-decoration-none d-flex align-items-center gap-1.5"
                 style={{ transition: 'color 0.2s ease' }}
                 onMouseEnter={(e) => e.currentTarget.style.color = '#3b82f6'}
